@@ -8,6 +8,25 @@ Hint - use Date class exposed in JS
 There is no automated test for this one, this is more for you to understand time goes up as computation goes up
 */
 
-function calculateTime(n) {
-    return 0.01;
+let n = 1000000000;
+function calculateTime() {
+  return new Promise(function (resolve) {
+    const startTime = new Date().getTime(); // Get the current timestamp in milliseconds
+
+    // Perform the computation (summing from 1 to n)
+    for (let i = 1; i <= n; i++) {
+      let a = i;
+    }
+
+    const endTime = new Date().getTime(); // Get the timestamp after the computation
+    const elapsedTime = endTime - startTime; // Calculate the elapsed time in milliseconds
+
+    resolve(elapsedTime);
+  });
 }
+async function main() {
+  const count = await calculateTime();
+  console.log(count);
+}
+
+main(n);

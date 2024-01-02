@@ -8,48 +8,33 @@
 function countVowels(str) {
   // Your code here
 
-  function checkVowel(p, q) {
-    p = { a, e, i, o, u };
-    q = { A, E, I, O, U };
+  function vowelCount(str) {
+    // Convert the string to lowercase to handle both uppercase and lowercase vowels
+    const lowerStr = str.toLowerCase();
 
-    let a = 0,
-      b = 0;
-    for (let i = 0; i < str.length; i++) {
-      if (str.length[i] == p) {
-        a++;
-      }
-      if (str.length[i] == q) {
-        b++;
-      } else {
-        a = 0;
+    // Initialize a variable to store the count of vowels
+    let vowelCount = 0;
+
+    // Iterate through each character in the string
+    for (let i = 0; i < lowerStr.length; i++) {
+      // Check if the current character is a vowel
+      if (isVowel(lowerStr[i])) {
+        // If it is a vowel, increment the count
+        vowelCount++;
       }
     }
-    return (c = a + b);
+    // Return the final count of vowels
+    return vowelCount;
   }
-  // for (let i = 0; i < str.length; i++) {
-  //   if (
-  //     str.length[i] == a &&
-  //     str.length[i] == e &&
-  //     str.length[i] == i &&
-  //     str.length[i] == o &&
-  //     str.length[i] == u
-  //   ) {
-  //     a += i;
-  //   }
-  //   if (
-  //     str.length[i] == A &&
-  //     str.length[i] == E &&
-  //     str.length[i] == I &&
-  //     str.length[i] == O &&
-  //     str.length[i] == U
-  //   ) {
-  //     a += i;
-  //   } else {
-  //     a = 0;
-  //   }
-  //   return a;
-  // }
+
+  // Helper function to check if a character is a vowel
+  function isVowel(char) {
+    return ["a", "e", "i", "o", "u"].includes(char);
+  }
+
+  const inputString = str;
+  const result = vowelCount(inputString);
+  return result;
 }
 
 module.exports = countVowels;
-
