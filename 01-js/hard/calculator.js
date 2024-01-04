@@ -16,6 +16,113 @@
   Once you've implemented the logic, test your code by running
 */
 
-class Calculator {}
+class Calculator {
+  constructor() {
+    this.result = 0;
+  }
+  add(a) {
+    if (isNaN(a)) throw new Error("invalid expression");
+    this.result += a;
+  }
+  subtract(b) {
+    if (isNaN(b)) throw new Error("invalid expression");
+    this.result = this.result - b;
+  }
+  divide(c) {
+    if (isNaN(c) || c === 0) throw new Error("invalid input");
+    this.result /= c;
+  }
+  multiply(d) {
+    this.result = d * this.result;
+  }
+  clear() {
+    this.result = 0;
+  }
+  getResult() {
+    return this.result;
+  }
+  calculate(f) {
+    const formattedExp = f.replace(/\s+/g, "").replace(/[^\d+\-*/().]/g, "");
+
+    const parenthesesCount = formattedExp.split("").reduce((count, char) => {
+      if (char === "(") count++;
+      else if (char === ")") count--;
+      if (count < 0) throw new Error("invalid parentheses");
+      return count;
+    }, 0);
+    if (parenthesesCount !== 0)
+      throw new Error("errrrrrrrrrrrrrrrooooooooooooor");
+
+    try {
+      this.result = eval(formattedExp);
+      if (!isFinite(this.result)) throw new Error("value is not finite");
+    } catch (error) {
+      throw new Error("Invalid expression");
+    }
+  }
+}
 
 module.exports = Calculator;
+//
+
+// class Calculator {
+//   constructor() {
+//     this.result = 0;
+//   }
+
+//   add(number) {
+//     if (isNaN(number)) throw new Error("Invalid input");
+//     this.result += number;
+//   }
+
+//   subtract(number) {
+//     if (isNaN(number)) throw new Error("Invalid input");
+//     this.result -= number;
+//   }
+
+//   multiply(number) {
+//     if (isNaN(number)) throw new Error("Invalid input");
+//     this.result *= number;
+//   }
+
+//   divide(number) {
+//     if (isNaN(number) || number === 0) throw new Error("Invalid input");
+//     this.result /= number;
+//   }
+
+//   clear() {
+//     this.result = 0;
+//   }
+
+//   getResult() {
+//     return this.result;
+//   }
+
+//   calculate(expression) {
+//     // Remove continuous spaces and validate the expression for invalid characters
+//     const formattedExpression = expression
+//       .replace(/\s+/g, "")
+//       .replace(/[^\d+\-*/().]/g, "");
+
+//     // Validate parentheses in the expression
+//     const parenthesesCount = formattedExpression
+//       .split("")
+//       .reduce((count, char) => {
+//         if (char === "(") count++;
+//         else if (char === ")") count--;
+//         if (count < 0) throw new Error("Invalid parentheses");
+//         return count;
+//       }, 0);
+//     if (parenthesesCount !== 0) throw new Error("Invalid parentheses");
+
+//     // Evaluate the expression
+//     try {
+//       this.result = eval(formattedExpression); // Use eval to perform the calculation
+//       if (!isFinite(this.result)) throw new Error("Invalid result");
+//     } catch (error) {
+//       throw new Error("Invalid expression");
+//     }
+//   }
+// }
+
+// module.exports = Calculator;
