@@ -6,19 +6,42 @@
  */
 
 function wait1(t) {
-
+  return new Promise(function (resolves, rejects) {
+    setTimeout(() => {
+      resolves();
+    }, t * 1000);
+  });
 }
 
 function wait2(t) {
-
+  return new Promise(function (resolves, rejects) {
+    setTimeout(() => {
+      resolves();
+    }, t * 1000);
+  });
 }
 
 function wait3(t) {
-
+  return new Promise(function (resolves, rejects) {
+    setTimeout(() => {
+      resolves();
+    }, t * 1000);
+  });
 }
 
 function calculateTime(t1, t2, t3) {
-
+  const timeNow = Date.now();
+  // promise chaining
+  return wait1(t1)
+    .then((result) => {
+      return wait2(t2);
+    })
+    .then((result) => {
+      return wait3(t3);
+    })
+    .then((result) => {
+      return Date.now() - timeNow;
+    });
 }
 
 module.exports = calculateTime;

@@ -3,9 +3,10 @@
 */
 
 function wait(n) {
-  return new Promise(function (resolves) {
-    resolves();
-    setTimeout(() => {}, n);
+  return new Promise(function (resolve, reject) {
+    setTimeout(() => {
+      resolve();
+    }, n * 1000);
   });
 }
 
