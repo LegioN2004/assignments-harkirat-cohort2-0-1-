@@ -44,23 +44,80 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
-const todolist = [
-  {
-    todo1: {
-      name: "haioresta",
-      id: "123",
-    },
-  },
-];
+const todos = [];
+
+// const todolist = [
+//   {
+//     todo1: {
+//       name: "haioresta",
+//       id: "1",
+//     },
+//   },
+//   {
+//     todo2: {
+//       name: "second",
+//       id: "2",
+//     },
+//   },
+//   {
+//     todo3: {
+//       name: "third",
+//       id: "3",
+//     },
+//   },
+// ];
+// console.log(todolist[1].todo1);
 
 app.use(bodyParser.json());
 
 app.get("/todos", (req, res) => {
-  for (let i = 0; i < todolist.length; i++) {
-    todolist[i];
-  }
-  res.status(200).json(todolist);
+  // for (let i = 0; i < todolist.length; i++) {
+  //   todolist[i];
+  // }
+  // res.status(200).json(todolist);
+  res.json(todos);
 });
 
-module.exports = app;
+app.get("/todos/:id", (req, res) => {
+  const id = req.params.id;
+  const todoid = todos.find(function (a) {
+    a.id === parseInt(id);
+  });
+  if (!todoid) {
+    res.status(404).json({
+      msg: "Not found",
+    });
+  } else {
+    res.json(todoid);
+  }
 
+  // for (let i = 0; i < todolist.length; i++) {
+  //   if (!todolist[i].id) {
+  //     res.status(404).json({
+  //       msg: "Not found",
+  //     });
+  //   } else {
+  //     res.status(200).json(todolist[i]);
+  //   }
+  // }
+});
+
+app.post("/todos", function () {
+  const newTodo = {
+    title: req.body.title,
+    id: Math.floor(Math.random() * 10000000),
+    description: req.body.description,
+  };
+  todos(push(newTodo));
+  res.status(201).json(newTodo);
+});
+
+app.put("/todos/:id", function () {
+  const todoIndex = todos.findIndex((t) => t.id === parseInt(req.params.id));
+});
+
+app.delete("/todos/:id");
+
+// app.listen(3000);
+
+module.exports = app;
