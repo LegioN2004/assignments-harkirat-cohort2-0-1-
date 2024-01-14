@@ -17,21 +17,30 @@ setInterval(() => {
   numberOfRequestsForUser = {};
 }, 1000);
 
-app.use(
-  function requests(req, res, next) {
-    if (!(req && res)) {
-      next();
+app.use(function requests(req, res, next) {
+  // requestCount++;
+  if (numberOfRequestsForUser[req.headers["user-id"]]) {
+    numberOfRequestsForUser[req.headers["user-id"]]++;
+    if (numberOfRequestsForUser[req.headers["user-id"]] > 5) {
+      res.status(404).send("bhaad me jaaon");
     } else {
-      requestCount++;
       next();
     }
-  },
-  function block(req, res, next) {
-    if (requestCount > 5) {
-      return res.status(404);
-    }
-  },
-);
+  } else {
+    numberOfRequestsForUser[req.headers["user-id"]] = 1;
+    next();
+  }
+  // if (requestCount > 5 && numberOfRequestsForUser.length > 4) {
+  //   return res.status(404).json({
+  //     msg: "Stop bombarding our server, you moron, you cannot do that lol :-----",
+  //   });
+  // } else {
+  //   next();
+  // }
+  // const userId = req.headers["user-id"];
+  // numberOfRequestsForUser = userId;
+  // numberOfRequestsForUser++;
+});
 
 app.get("/user", function (req, res) {
   res.status(200).json({ name: "john" });
@@ -42,4 +51,3 @@ app.post("/user", function (req, res) {
 });
 
 module.exports = app;
-

@@ -11,12 +11,14 @@ let requestCount = 0;
 // requestCount variable
 
 app.use(function count(req, res, next) {
-  if (!(req && res)) {
-    next();
-  } else {
-    requestCount++;
-    next();
-  }
+  // if (!(req && res)) {
+  //   next();
+  // } else {
+  //   requestCount++;
+  //   next();
+  // }
+  requestCount++;
+  next();
 });
 
 app.get("/user", function (req, res) {
@@ -32,4 +34,3 @@ app.get("/requestCount", function (req, res) {
 });
 
 module.exports = app;
-
