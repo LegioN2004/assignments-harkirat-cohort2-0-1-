@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 // Connect to MongoDB
 mongoose.connect(
-  "mongodb+srv://milindabarua04:legionfirstmongodbinstance.l4lglul.mongodb.net/assignment03_DB",
+  "mongodb+srv://milindabarua04:legion@firstmongodbinstance.l4lglul.mongodb.net/assignment04_DB",
 );
 
 // Define schemas
@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
 const CourseSchema = new mongoose.Schema({
   // Schema definition here
   // Schema definition here
-  id: Number,
+  courseId: Number,
   title: String,
   description: String,
   price: Number,
@@ -37,4 +37,3 @@ module.exports = {
   User,
   Course,
 };
-
