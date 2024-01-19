@@ -8,7 +8,6 @@
     let oldTodoState = [];
 
     function addTodoToDom() {
-      
     }
 
     function removeTodoFromDom(todo) {
@@ -28,10 +27,33 @@
       const added = [];
       const deleted = [];
       const updated = [];
+      oldTodoState = newTodos;
+      for(let i = 0; i<= newTodos.length; i++){
+        if(oldTodoState[i].title == newTodos[i].title){
+          added = newTodos.title
+        }else if(oldTodoState[i].title == null){
+          updated = newTodos.title
+        }else{
+          deleted = newTodos.title
+        }
+        if(oldTodoState[i].description == newTodos[i].description){
+          added = newTodos.description
+        }else if(oldTodoState[i].description == null){
+          updated = newTodos.description
+        }else{
+          deleted = newTodos.description
+        }
+        if(oldTodoState[i].id == newTodos[i].id){
+          added = newTodos.id
+        }else if(oldTodoState[i].id == null){
+          updated = newTodos.id
+        }else{
+          deleted = newTodos.id
+        }
+      }
       // calculate these 3 arrays
       // call addTodo, removeTodo, updateTodo functions on each of the
       // elements
-      oldTodoState = newTodos;
     }
 
     function addTodo() {
