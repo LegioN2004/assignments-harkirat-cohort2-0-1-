@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+*{
+font-family: 'Open Sans', sans-serif;
+}
+
+.container{
+    display: flex;
+    position: relative;
+    width: 350px;
+    margin: 20px;
+    border-radius: 4px;
+    padding-bottom: 20px;
+}
+
+.bg-img { 
+    background-image: url("https://img.freepik.com/free-photo/palm-leaves-shadow-beige_53876-95504.jpg?w=360&t=st=1706539239~exp=1706539839~hmac=e34330d33248919f9be8c0a9f137ceff065d62bfed25a71f859527e72b79ed5b");
+   height: 125px;
+   border-radius: 4px 4px 0px 0px;
+}
+
+.profile{
+    position: absolute;
+}
+
+.profile img {
+   height: 150px;
+   width: 140px;
+   border: 4px solid white;
+    border-radius: 50%;
+    margin: 190px 90px 90px -230px ;
+}
+
+.main h2{
+    margin-top: 60px;
+}

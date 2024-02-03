@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+* {
+margin: 0;
+font-family: 'Open Sans', sans-serif;
+color: black;
+}
+
+.footer {
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
