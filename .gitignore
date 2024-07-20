@@ -3,4 +3,6 @@
 **.env
 .env
 **.svg
+**dist
 
+week-10/1-postgres-simple/src/password.ts

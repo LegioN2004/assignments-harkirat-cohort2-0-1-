@@ -1,2 +1,3 @@
+import { pg_url } from './password';
 
-export const DB_URL = "postgres://postgres:mysecretpassword@localhost/postgres";
+export const DB_URL = pg_url;
