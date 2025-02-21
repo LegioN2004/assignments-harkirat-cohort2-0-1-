@@ -1,5 +1,7 @@
+import { PrismaClient } from '@prisma/client/edge';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { Hono } from 'hono';
+import { withAccelerate } from '@prisma/extension-accelerate';
+import { Context, Hono } from 'hono';
 import { cors } from 'hono/cors';
 import {
 	decode as JwtDecode,
@@ -7,62 +9,92 @@ import {
 	verify as JwtVerify,
 } from 'hono/jwt';
 import { v4 as uuidv4 } from 'uuid';
-import { getPrisma } from './prismaFunction';
-import { createPost, createUser } from './types';
+import { createPost, createUser } from './zod/types';
 
-interface Env {
-	DATABASE_URL: string;
-	JWT_SECRET: string;
+enum StatusCode {
+	BADREQ = 400,
+	NOTFOUND = 404,
+	NOTPERMISSIOON = 403,
 }
 
-const app = new Hono<{ Bindings: Env }>();
+const app = new Hono();
 
-app.use('/*', cors());
+app.use(cors());
 
 app.get('/', (c) => {
 	console.log('helooooooooooooo, broooooooooooooo');
 	return c.text('Hello Hono, hi and bye bye!');
 });
 
-async function insertUser(
-	env: Env,
-	email: string,
-	username: string,
-	password: string
-) {
-	const prisma = getPrisma(env.DATABASE_URL);
-	return prisma.user.create({
-		data: { email, username, password },
-	});
-}
+app.route('/api/v1/users', userRoute);
+app.route('/api/v1/posts', postRoute);
+app.route('/api/v1/tags', tagRoute);
 
-app.post('/users/signup', async (c) => {
-	const requestBody = await c.req.json();
-	const parsedBody = createUser.safeParse(requestBody);
+app.post('/users/signup', async (c: Context) => {
+	const prisma = new PrismaClient({
+		datasourceUrl: c.env.DATABASE_URL,
+	}).$extends(withAccelerate());
+
 	try {
-		if (parsedBody.success) {
-			const token = await JwtSign(
-				{ email: parsedBody.data.email, username: parsedBody.data.username },
-				c.env.JWT_SECRET
-			);
-			const { email, username, password } = parsedBody.data;
-			await insertUser(c.env, email, username, password);
-			return c.json({ success: 'true', token });
-		} else {
-			return c.json({ message: 'Invalid details sent, please try again' }, 401);
+		const requestBody: {
+			email: string;
+			username: string;
+			password: string;
+		} = await c.req.json();
+
+		const parsedBody = createUser.safeParse(requestBody);
+
+		if (!parsedBody.success) {
+			return c.body('Invalid user input, fix the typo', StatusCode.BADREQ);
 		}
+
+		const isUserExist = await prisma.user.findFirst({
+			where: { email: requestBody.email },
+		});
+
+		if (isUserExist) {
+			return c.body(
+				'Email already exists in the database, create a new one or fix the current one',
+				StatusCode.BADREQ
+			);
+		}
+
+		const token = await JwtSign(
+			{ email: parsedBody.data.email, username: parsedBody.data.username },
+			c.env.JWT_SECRET
+		);
+
+		const response = await prisma.user.create({
+			data: {
+				username: parsedBody.data.username,
+				email: parsedBody.data.email,
+				password: parsedBody.data.password,
+			},
+		});
+
+		const userId = response.id;
+
+		const tokenSign = await JwtSign({ userId }, c.env.JWT_SECRET);
+
+		return c.json({
+			message: 'login successfully',
+			token: tokenSign,
+			success: 'true',
+			user: {
+				userId: response.id,
+				username: response.username,
+				email: response.email,
+			},
+		});
 	} catch (error) {
 		if (error instanceof PrismaClientKnownRequestError) {
 			if (error.code === 'P2002') {
 				return c.json({ message: 'email already taken, give proper email.' });
 			} else {
-				console.log('error: ', error);
-				return c.json({ error: 'Login failed' }, 500);
+				return c.json({ error: `Login failed due to ${error}` }, 500);
 			}
 		}
 	}
-	const userId = uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
-	return c.json({ message: 'Hello World', userId: userId });
 });
 
 // middleware for signing in
