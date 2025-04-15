@@ -58,6 +58,40 @@ export const getUserPost = async (c: Context) => {
 	}
 };
 
+export const getPostById = async (c: Context) => {
+	const prisma = new PrismaClient({
+		datasourceUrl: c.env.DATABASE_URL,
+	}).$extends(withAccelerate());
+
+	try {
+		const id: number = Number(c.req.param('id'));
+
+		const findPost = await prisma.post.findUnique({
+			where: {
+				id: id,
+			},
+			include: {
+				Tags: true,
+			}
+		});
+
+		if (findPost == null) {
+			return c.body("The post doesn't exist", StatusCode.NOTFOUND);
+		}
+
+		return c.json({
+			posts: {
+				id: findPost.id,
+				title: findPost.title,
+				body: findPost.body,
+				tags: findPost.Tags.map((d) => d.tag)
+			}
+		})
+	} catch (error) {
+		return c.body(`Internal server error ${error}`, 500);
+	}
+};
+
 export const createPost = async (c: Context) => {
 	const prisma = new PrismaClient({
 		datasourceUrl: c.env.DATABASE_URL,
@@ -107,34 +141,3 @@ export const createPost = async (c: Context) => {
 	}
 };
 
-export const getPostById = async (c: Context) => {
-	const prisma = new PrismaClient({
-		datasourceUrl: c.env.DATABASE_URL,
-	}).$extends(withAccelerate());
-
-	try {
-		const id: number = Number(c.req.param('id'));
-
-		const findPost = await prisma.post.findUnique({
-			where: {
-				id: id,
-			},
-			include: {
-				Tags: true,
-			}
-		});
-
-		if (findPost == null) {
-			return c.body("The post doesn't exist", StatusCode.NOTFOUND);
-		}
-
-		return c.json({
-			posts: {
-				id: findPost.id,
-				
-			}
-		})
-	} catch (error) {
-		return c.body(`Internal server error ${error}`, 500);
-	}
-};
